@@ -44,93 +44,119 @@
             </div>
 
             <!-- this is right and left colum -->
-            <form @submit.prevent="addTransaction">
-                <div class="col-12 ">
-                    <div class="row g-4">
+            <div class="col-12 ">
+                <div class="row g-4">
 
-                        <!-- Left Colum  -->
-                        <div class="col-12 col-lg-6">
-                            <div class="card bg-dark text-white">
-                                <div class="card-body">
-                                    <h4 class="mb-3">Add Transaction</h4>
-                                    <input type="text" class="form-control mb-3" placeholder="Title" v-model="title" />
-                                    <span></span>
-
-                                    <div class="row g-2 mb-3">
-                                        <div class="col-6">
-                                            <input type="number" class="form-control" placeholder="Amount"
-                                                v-model="amount" />
-                                        </div>
-                                        <div class="col-6">
-                                            <select class="form-select " v-model="userselect">
-                                                <option>Income</option>
-                                                <option>Expense</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="row g-2 mb-3">
-                                        <div class="col-6">
-                                            <select class="form-select" v-model="category">
-                                                <option>Food</option>
-                                                <option>Rent</option>
-                                                <option>Salary</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-6">
-                                            <input type="date" class="form-control" v-model="date" />
-                                        </div>
-                                    </div>
-
-                                    <button class="btn btn-success w-100" @click="addTransaction">Add</button>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="col-12 col-lg-6">
-                            <FilterBar />
-                        </div>
-
-
-
+                    <div class="col-12 col-lg-6 ">
+                        <AddTransaction @data="receivechildcompData" />
                     </div>
-                </div>
-            </form>
 
-            <div class="col-12">
-                <div class="card-body bg-dark text-white text-center p-3">
-                    <h4 class="mb-2">Transactions</h4>
-                    <p class="mb-0">No transactions found</p>
+
+
+                    <div class="col-12 col-lg-6">
+                        <FilterBar @update-search="receiveDataFromChild" />
+                    </div>
+
+
+
                 </div>
             </div>
+
+          <div class="col-12">
+    <div class="card bg-dark text-white p-3">
+
+        <h4 class="mb-3 text-center fw-bold">Transactions</h4>
+
+        <table class="table table-dark table-bordered text-center">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr v-for="item in transactions" :key="index">
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.amount }}</td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.date }}</td>
+                    <td class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-primary btn-sm " @click="editTransaction">Edit</button>
+                        <button class="btn btn-danger btn-sm"@click="deleteTransaction"> Delete</button>
+                    </td>
+                </tr>
+
+                <tr v-if="transactions.length === 0">
+                    <td  colspan="6">No transactions found</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+
+        </div>
+        <div class="col-12 text-center text-white p-3 mt-4">
+            <footer>
+                <p>&copy; 2026 Personal Finance Tracker. All rights reserved.</p>
+            </footer>
         </div>
     </div>
 </template>
 
 <script>
+import edit from '@/components/edit.vue'
 import FilterBar from '@/components/FilterBar.vue'
+import AddTransaction from '@/components/AddTransaction.vue'
 
 export default {
     components: {
-        FilterBar
+        FilterBar,
+        AddTransaction,
+        edit
     },
-
     data() {
         return {
-            title: '',
-            amount: '',
-            userselect: 'Income',
-            category: 'Food',
-            date: '',
-            transactions: []
-
-
-
-
+            transactions: [],
+            
         }
+    },
+    methods: {
+        receivechildcompData(value) {
+            this.transactions.unshift(value)
+
+
+        },
+        deleteTransaction(index) {
+            this.transactions.splice(index, 1)
+        },
+        editTransaction(index) {
+
+
+        },
+        receiveDataFromChild(value) {
+            this.search = value.search
+            this.category = value.category
+            this.month = value.month
+            this.type = value.type
+        },
+
+
+
 
     },
+    
+
 
 }
 </script>
+
