@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="sendAddTransactionDataToParent" >
+  <form @submit.prevent="sendAddTransactionDataToParent" novalidate>
 
     <div class="card bg-dark text-white">
       <div class="card-body">
