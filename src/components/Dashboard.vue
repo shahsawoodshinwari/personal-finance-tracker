@@ -66,7 +66,7 @@
     <div class="card bg-dark text-white p-3">
 
         <h4 class="mb-3 text-center fw-bold">Transactions</h4>
-<div class="table-responsive">
+<div class="table-responsive-sm">
         <table class="table table-dark table-hover table-bordered text-center">
             <thead>
                 <tr>
@@ -81,14 +81,14 @@
 
             <tbody>
                 <tr v-for="(item, index) in transactions" :key="index">
-                    <td>{{ item.title }}</td>
-                    <td>{{ item.amount }}</td>
-                    <td>{{ item.type }}</td>
-                    <td>{{ item.category }}</td>
-                    <td>{{ item.date }}</td>
+                    <td class=" text-nowrap" >{{ item.title }}</td>
+                    <td class=" text-nowrap" >{{ item.amount }}</td>
+                    <td class=" text-nowrap" >{{ item.type }}</td>
+                    <td class=" text-nowrap" >{{ item.category }}</td>
+                    <td class=" text-nowrap" >{{ item.date }}</td>
                     <td class="d-flex justify-content-center gap-2">
-                        <button class="btn btn-primary btn-sm " @click="editTransaction">Edit</button>
-                        <button class="btn btn-danger btn-sm"@click="deleteTransaction (index)"> Delete</button>
+                        <button class="btn  btn-sm btn btn-outline-primary" @click="editTransaction">Edit</button>
+                        <button class="btn  btn-sm btn btn-outline-danger"@click="deleteTransaction (index)"> Delete</button>
                     </td>
                 </tr>
 
