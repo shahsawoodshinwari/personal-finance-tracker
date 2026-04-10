@@ -9,7 +9,7 @@
                         <div class="card   bg-dark text-center text-white">
                             <div class="card-body">
                                 <p class=" small mb-2">Total Income</p>
-                                <h2 class="text-success mb-0">0.00</h2>
+                                <h2 class="text-success mb-0">{{ totalIncome }}</h2>
                             </div>
                         </div>
                     </div>
@@ -18,7 +18,7 @@
                         <div class="card  text-bg-dark  text-center">
                             <div class="card-body">
                                 <p class="small mb-2">Total Expenses</p>
-                                <h2 class="text-danger mb-0">0.00</h2>
+                                <h2 class="text-danger mb-0">{{ totalExpenses }}</h2>
                             </div>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                         <div class="card text-white bg-dark text-center">
                             <div class="card-body">
                                 <p class="small mb-2">Remaining Balance</p>
-                                <h2 class="text-success mb-0">0.00</h2>
+                                <h2 class="text-info mb-0">{{ remainingBalance }}</h2>
                             </div>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                         <div class="card text-white bg-dark text-center">
                             <div class="card-body">
                                 <p class=" small mb-2">Transactions</p>
-                                <h2 class="mb-0  ">0</h2>
+                                <h2 class="mb-0  ">{{ totalTransactions }}</h2>
                             </div>
                         </div>
                     </div>
@@ -62,44 +62,46 @@
                 </div>
             </div>
 
-          <div class="col-12">
-    <div class="card bg-dark text-white p-3">
+            <div class="col-12">
+                <div class="card bg-dark text-white p-3">
 
-        <h4 class="mb-3 text-center fw-bold">Transactions</h4>
-<div class="table-responsive-sm">
-        <table class="table table-dark table-hover table-bordered text-center">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Amount</th>
-                    <th>Type</th>
-                    <th>Category</th>
-                    <th>Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
+                    <h4 class="mb-3 text-center fw-bold">Transactions</h4>
+                    <div class="table-responsive-sm">
+                        <table class="table table-dark table-hover table-bordered text-center">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
 
-            <tbody>
-                <tr v-for="(item, index) in transactions" :key="index">
-                    <td class=" text-nowrap" >{{ item.title }}</td>
-                    <td class=" text-nowrap" >{{ item.amount }}</td>
-                    <td class=" text-nowrap" >{{ item.type }}</td>
-                    <td class=" text-nowrap" >{{ item.category }}</td>
-                    <td class=" text-nowrap" >{{ item.date }}</td>
-                    <td class="d-flex justify-content-center gap-2">
-                        <button class="btn  btn-sm btn btn-outline-primary" @click="editTransaction">Edit</button>
-                        <button class="btn  btn-sm btn btn-outline-danger"@click="deleteTransaction (index)"> Delete</button>
-                    </td>
-                </tr>
+                            <tbody>
+                                <tr v-for="(item, index) in transactions" :key="index">
+                                    <td class=" text-nowrap">{{ item.title }}</td>
+                                    <td class=" text-nowrap">{{ item.amount }}</td>
+                                    <td class=" text-nowrap">{{ item.type }}</td>
+                                    <td class=" text-nowrap">{{ item.category }}</td>
+                                    <td class=" text-nowrap">{{ item.date }}</td>
+                                    <td class="d-flex justify-content-center gap-2">
+                                        <button class="btn  btn-sm btn btn-outline-primary"
+                                            @click="editTransaction">Edit</button>
+                                        <button class="btn  btn-sm btn btn-outline-danger"
+                                            @click="deleteTransaction(index)"> Delete</button>
+                                    </td>
+                                </tr>
 
-                <tr v-if="transactions.length === 0">
-                    <td  colspan="6">No transactions found</td>
-                </tr>
-            </tbody>
-        </table>
-</div>
-    </div>
-</div>
+                                <tr v-if="transactions.length === 0">
+                                    <td colspan="6">No transactions found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -127,9 +129,32 @@ export default {
     data() {
         return {
             transactions: [],
-            
+
         }
     },
+   computed: {
+  totalTransactions() {
+     return this.transactions.length 
+  },
+  // 1. Calculate Total Income
+  totalIncome() {
+    return this.transactions
+      .filter(t => t.type === 'Income')
+      .reduce((acc, t) => acc + Number(t.amount), 0);
+  },
+  // 2. Calculate Total Expenses
+  totalExpenses() {
+    return this.transactions
+      .filter(t => t.type === 'Expense')
+      .reduce((acc, t) => acc + Number(t.amount), 0);
+  },
+  // 3. Calculate Remaining Balance
+  remainingBalance() {
+    return this.totalIncome - this.totalExpenses;
+  }
+},
+
+    
     methods: {
         receivechildcompData(value) {
             this.transactions.unshift(value)
@@ -154,9 +179,8 @@ export default {
 
 
     },
-    
+
 
 
 }
 </script>
-
