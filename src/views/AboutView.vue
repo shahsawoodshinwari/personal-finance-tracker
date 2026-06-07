@@ -1,12 +1,16 @@
 <template>
-  <div>
-    <h1>About Page</h1>
-    <p>This is About Page</p>
+  <div class="container-fluid p-0" style="background-color: #111827; min-height: 100vh;">
+    <!-- <AppHeader /> -->
+    <AppHeader />
   </div>
 </template>
 
 <script>
+import AppHeader from '@/components/AppHeader.vue';
+
 export default {
-  name: "AboutView"
+  components: {
+    AppHeader,
+  }
 }
 </script>

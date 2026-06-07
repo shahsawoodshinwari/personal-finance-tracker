@@ -1,8 +1,8 @@
 <template>
   <form @submit.prevent="sendAddTransactionDataToParent" novalidate>
 
-    <div class="card bg-dark text-white">
-      <div class="card-body">
+    <div class="card bg-dark text-white h-100">
+      <div class="card-body d-flex flex-column">
         <h4 class="mb-3">Add Transaction</h4>
         <div class="">
           <div class="mb-3">
@@ -64,15 +64,19 @@
             </div>
           </div>
         </div>
-
-        <button class="btn btn-success w-100" type="submit">Add</button>
+        <div class="d-flex gap-2 mt-4">
+          <button class="btn btn-success w-50 " type="submit">Add</button>
+          <button class="btn btn-danger w-50" type="reset" @click="resetForm">Reset</button>
+        </div>
       </div>
     </div>
   </form>
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 export default {
+
   data() {
     return {
       form: {
@@ -90,25 +94,44 @@ export default {
 
       this.errors = {};
 
-
       if (!this.form.title) this.errors.title = 'Title is required';
       if (!this.form.amount) this.errors.amount = 'Amount is required';
       if (!this.form.type) this.errors.type = 'Type is required';
       if (!this.form.category) this.errors.category = 'Category is required';
       if (!this.form.date) this.errors.date = 'Date is required';
-
-      if (this.errors.title, this.errors.amount, this.errors.type, this.errors.category, this.errors.date) {
-        return true;
+      // STOP if empty
+      if (
+        !this.form.title ||
+        !this.form.amount ||
+        !this.form.type ||
+        !this.form.category ||
+        !this.form.date
+      ) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Please fill all fields before adding transaction!",
+        });
+        return;
       }
 
-      this.$emit('data', {
+
+      this.$emit('add-transaction', {
         title: this.form.title,
         amount: this.form.amount,
         type: this.form.type,
         category: this.form.category,
-        date: this.form.date
+        date: this.form.date,
+      });
+      Swal.fire({
+        icon: "success",
+        title: "Saved Successfully",
+        text: "Your transaction has been added",
+        showConfirmButton: false,
+        timer: 2500
       });
 
+      // Reset form fields
 
       this.form.title = '';
       this.form.amount = '';
@@ -116,6 +139,14 @@ export default {
       this.form.category = '';
       this.form.date = '';
     },
+    resetForm() {
+      this.form.title = '';
+      this.form.amount = '';
+      this.form.type = '';
+      this.form.category = '';
+      this.form.date = '';
+
+    }
   },
 };
 </script>

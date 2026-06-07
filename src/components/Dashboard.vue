@@ -1,42 +1,48 @@
 <template>
-    <div class="container-fluid text-white ">
+    <div class="container-fluid text-white p-4" >
 
         <div class="row g-4">
 
-            <div class="col-12">
-                <div class="row g-3">
-                    <div class="col-6 col-md-3">
-                        <div class="card   bg-dark text-center text-white">
-                            <div class="card-body">
+            <div class="col-12 ">
+                <div class="row">
+                    <div class="col-6 col-md-3 dashboard">
+                        <div class="card bg-dark text-white text-center   rounded-3">
+                            <div class="card-body py-4">
                                 <p class=" small mb-2">Total Income</p>
-                                <h2 class="text-success mb-0">{{ totalIncome }}</h2>
+                                <h2 class="fw-bold display-6 mb-0"
+                                    :class="totalIncome > 0 ? 'text-success' : 'text-secondary'">
+                                    {{ totalIncome }}
+                                </h2>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-6 col-md-3">
+                    <div class="col-6 col-md-3 dashboard">
                         <div class="card  text-bg-dark  text-center">
-                            <div class="card-body">
+                            <div class="card-body py-4">
                                 <p class="small mb-2">Total Expenses</p>
-                                <h2 class="text-danger mb-0">{{ totalExpenses }}</h2>
+                                <h2 class="fw-bold  display-6  mb-0"
+                                :class="totalExpenses > 0 ? 'text-danger': 'text-secondary'">{{ totalExpenses }}</h2>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-6 col-md-3">
+                    <div class="col-6 col-md-3 dashboard">
                         <div class="card text-white bg-dark text-center">
-                            <div class="card-body">
+                            <div class="card-body py-4">
                                 <p class="small mb-2">Remaining Balance</p>
-                                <h2 class="text-info mb-0">{{ remainingBalance }}</h2>
+                                <h2 class="fw-bold  display-6  mb-0"
+                                :class="remainingBalance > 0 ? 'text-success' : 'text-danger'">{{ remainingBalance }}</h2>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-6 col-md-3">
+                    <div class="col-6 col-md-3 dashboard">
                         <div class="card text-white bg-dark text-center">
-                            <div class="card-body">
+                            <div class="card-body py-4">
                                 <p class=" small mb-2">Transactions</p>
-                                <h2 class="mb-0  ">{{ totalTransactions }}</h2>
+                                <h2 class="fw-bold  mb-0 display-6 " 
+                                :class="totalTransactions > 0 ? 'text-info': 'text-secondary'">{{ totalTransactions }}</h2>
                             </div>
                         </div>
                     </div>
@@ -44,17 +50,19 @@
             </div>
 
             <!-- this is right and left colum -->
-            <div class="col-12 ">
-                <div class="row g-4">
+            <div class="col-12">
+                <div class="row">
 
                     <div class="col-12 col-lg-6 ">
-                        <AddTransaction @data="receivechildcompData" />
+                        <AddTransaction @addTransaction="receivechildcompData" />
+                        
                     </div>
 
 
 
                     <div class="col-12 col-lg-6">
-                        <FilterBar @update-search="receiveDataFromChild" />
+                        <FilterBar @search="receiveDataFromChild" />
+                        
                     </div>
 
 
@@ -63,44 +71,7 @@
             </div>
 
             <div class="col-12">
-                <div class="card bg-dark text-white p-3">
-
-                    <h4 class="mb-3 text-center fw-bold">Transactions</h4>
-                    <div class="table-responsive-sm">
-                        <table class="table table-dark table-hover table-bordered text-center">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Amount</th>
-                                    <th>Type</th>
-                                    <th>Category</th>
-                                    <th>Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr v-for="(item, index) in transactions" :key="index">
-                                    <td class=" text-nowrap">{{ item.title }}</td>
-                                    <td class=" text-nowrap">{{ item.amount }}</td>
-                                    <td class=" text-nowrap">{{ item.type }}</td>
-                                    <td class=" text-nowrap">{{ item.category }}</td>
-                                    <td class=" text-nowrap">{{ item.date }}</td>
-                                    <td class="d-flex justify-content-center gap-2">
-                                        <button class="btn  btn-sm btn btn-outline-primary"
-                                            @click="editTransaction">Edit</button>
-                                        <button class="btn  btn-sm btn btn-outline-danger"
-                                            @click="deleteTransaction(index)"> Delete</button>
-                                    </td>
-                                </tr>
-
-                                <tr v-if="transactions.length === 0">
-                                    <td colspan="6">No transactions found</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <TransactionList :transactions="transactions" @deleteTransaction="deleteTransaction" />
             </div>
 
 
@@ -109,13 +80,14 @@
         </div>
         <div class="col-12 text-center text-white p-3 mt-4">
             <footer>
-                <p>&copy; 2026 Personal Finance Tracker. All rights reserved.</p>
+                <p class="small mb-0">&copy; 2026 Personal Finance Tracker. All rights reserved.</p>
             </footer>
         </div>
     </div>
 </template>
 
 <script>
+import TransactionList from '@/components/TransactionList.vue'
 import edit from '@/components/edit.vue'
 import FilterBar from '@/components/FilterBar.vue'
 import AddTransaction from '@/components/AddTransaction.vue'
@@ -124,50 +96,68 @@ export default {
     components: {
         FilterBar,
         AddTransaction,
-        edit
+        edit,
+        TransactionList,
     },
     data() {
         return {
             transactions: [],
+            search: '',
+            category: '',
+            month: '',
+            type: '',
+
+
 
         }
     },
-   computed: {
-  totalTransactions() {
-     return this.transactions.length 
-  },
-  // 1. Calculate Total Income
-  totalIncome() {
-    return this.transactions
-      .filter(t => t.type === 'Income')
-      .reduce((acc, t) => acc + Number(t.amount), 0);
-  },
-  // 2. Calculate Total Expenses
-  totalExpenses() {
-    return this.transactions
-      .filter(t => t.type === 'Expense')
-      .reduce((acc, t) => acc + Number(t.amount), 0);
-  },
-  // 3. Calculate Remaining Balance
-  remainingBalance() {
-    return this.totalIncome - this.totalExpenses;
-  }
-},
 
-    
+
+    mounted() {
+        const data = localStorage.getItem("transactions")
+        if (data) {
+            this.transactions = JSON.parse(data)
+
+        }
+    },
+
+
+
+
+    computed: {
+        totalTransactions() {
+            return this.transactions.length
+        },
+        // 1. Calculate Total Income
+        totalIncome() {
+            return this.transactions
+                .filter(t => t.type === 'Income')
+                .reduce((acc, t) => acc + Number(t.amount), 0);
+        },
+        // 2. Calculate Total Expenses
+        totalExpenses() {
+            return this.transactions
+                .filter(t => t.type === 'Expense')
+                .reduce((acc, t) => acc + Number(t.amount), 0);
+        },
+        // 3. Calculate Remaining Balance
+        remainingBalance() {
+            return this.totalIncome - this.totalExpenses;
+        }
+    },
+
+
+
+
     methods: {
         receivechildcompData(value) {
             this.transactions.unshift(value)
+            localStorage.setItem("transactions", JSON.stringify(this.transactions))
 
 
         },
-        deleteTransaction(index) {
-            this.transactions.splice(index, 1)
-        },
-        editTransaction(index) {
 
 
-        },
         receiveDataFromChild(value) {
             this.search = value.search
             this.category = value.category
@@ -184,3 +174,15 @@ export default {
 
 }
 </script>
+
+<style>
+.dashboard {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard:hover {
+    /* zoom in */
+    transform: scale(1.05); 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+</style>
