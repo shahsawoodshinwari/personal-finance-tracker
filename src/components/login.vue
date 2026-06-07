@@ -13,10 +13,10 @@
           </p>
         </div>
   
-        <!-- Form -->
+        
         <form>
           
-          <!-- Email -->
+          
           <div class="mb-4">
             <label class="form-label fw-medium text-dark">
               Email Address
@@ -29,7 +29,7 @@
             />
           </div>
   
-          <!-- Password -->
+         
           <div class="mb-4">
             <label class="form-label fw-medium text-dark">
               Password
@@ -42,7 +42,7 @@
             />
           </div>
   
-          <!-- Options -->
+          
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="form-check">
               <input
@@ -76,9 +76,9 @@
           </button>
         </form>
   
-        <!-- Footer -->
+       
         <p class="text-center text-secondary mt-4 mb-0">
-          Don’t have an account?
+          Don't have an account?
   
           <a
             href="#"

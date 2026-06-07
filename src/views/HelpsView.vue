@@ -1,15 +1,19 @@
 <template>
-  <div class="container-fluid p-0 text-white" style="background-color: #111827; min-height: 100vh">
-    <Helps/>
+  <div
+    class="container-fluid p-0 text-white"
+    style="background-color: #111827; min-height: 100vh"
+>
+    <helps />
   </div>
 </template>
 
 <script>
-import Helps from '@/components/helps.vue'
+import helps from '@/components/helps.vue'
+
 export default {
-  components: {
-    Helps,
-  },
   name: 'HelpsView',
+  components: {
+    helps,
+  },
 }
 </script>
